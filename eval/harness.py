@@ -29,8 +29,8 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from eval.rubric import RUBRIC, MAX_SCORE, REQUIRED_CRITERIA, Criterion
 from eval.scenarios import ALL_SCENARIOS, Scenario
-import agent.rate_limiter as _rl
-from agent.client import get_client
+import agent.utils.rate_limiter as _rl
+from agent.utils.client import get_client
 
 DOCUMENTS_DIR = PROJECT_ROOT / "data" / "documents"
 MODEL = "gpt-5.6-sol"

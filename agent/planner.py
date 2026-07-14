@@ -4,8 +4,8 @@ import time
 
 from openai import RateLimitError, InternalServerError, APIStatusError
 
-import agent.rate_limiter as _rl
-from agent.client import get_client
+import agent.utils.rate_limiter as _rl
+from agent.utils.client import get_client
 from agent.state import InvestigationState, Note
 import prompts.planner as _plan_prompts
 import prompts.executor as _exec_prompts

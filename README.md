@@ -186,7 +186,10 @@ Instead of asking the AI to "read this search result, decide what it means, and 
 This split makes the AI much more accurate.
 
 ### 3. Using Keyword Search (BM25) Instead of Vector Search
-We chose a direct keyword search rather than modern "vector search" because keyword search is predictable. If we search for a word like "litigation" and get zero results, the AI knows for sure that the word isn't there and can immediately flag a missing document. Vector search often returns irrelevant results instead of a clear "not found" signal, which can confuse the AI.
+We chose a direct keyword search rather than modern "vector search" because keyword search is predictable. If we search for a word like "litigation" and get zero results, the AI knows for sure that the word isn't there and can immediately flag a missing document. 
+
+Another reason for not using the vector embeddings in this initial version is that the focus is on testing the agent's ability to plan and reason over the given documents rather than building a production-ready RAG system.
+Using a hybrid retrieval system with bm25 and vector embeddings would be a good next step.
 
 ---
 

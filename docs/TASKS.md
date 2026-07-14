@@ -1,142 +1,80 @@
-# Implementation Tasks
+# Step-by-Step Build Plan (Tasks)
 
-## Status legend
-- `[ ]` not started
-- `[x]` complete
+This document shows the checklist used to build the Legal Investigation AI Agent from start to finish.
 
----
-
-## Milestone 1 — Core data model (`agent/state.py`)
-
-Single file, no LLM dependency. Do this first so every later file has a shared import.
-
-- [x] **M1.1** Create `agent/__init__.py` (empty)
-- [x] **M1.2** Create `agent/state.py` with `Note` and `InvestigationState` dataclasses exactly as specified in `docs/architecture.md`
-
-**Done when:** `from agent.state import Note, InvestigationState` succeeds and `repr()` on both dataclasses is readable.
+## Status Legend
+* `[ ]` Not started
+* `[x]` Complete
 
 ---
 
-## Milestone 2 — Tools (`agent/tools.py`)
-
-Pure file I/O. No LLM, no state imports.
-
-- [x] **M2.1** Implement `list_files(directory: str) -> list[str]` — returns sorted list of filenames in the directory
-- [x] **M2.2** Implement `read_file(directory: str, filename: str) -> str` — reads the file, truncates to `MAX_CHARS = 8000`
-- [x] **M2.3** Implement `search_in_file(directory: str, filename: str, query: str) -> str` — returns all lines containing the query (case-insensitive), joined with newlines; returns empty string if none match or file not found
-
-**Done when:** All three functions return correct output for the documents in `data/documents/` and return graceful empty/error strings on bad inputs (no exceptions).
+## 📝 Step 1: Create the Notebook (Memory Structure)
+* **Goal:** Create the basic structure that the AI uses to take notes and track its progress.
+* **Status:** `[x]` Complete
+* **Tasks:**
+  * [x] Create the initial folder structures.
+  * [x] Create `agent/state.py` to hold the list of notes, files read, and questions.
 
 ---
 
-## Milestone 3 — Planner (`agent/planner.py`)
-
-All LLM calls live here. Requires `OPEN_AI_KEY` in environment.
-
-- [x] **M3.1** Implement `plan(goal: str, docs: list[str]) -> list[str]` — returns an ordered list of investigation questions (3–8 items). Prompt instructs the model to cover all five categories: IP Ownership, Contractual Obligations, Litigation & Liabilities, Corporate Structure, Regulatory & Compliance.
-- [x] **M3.2** Implement `select_tool(state: InvestigationState, question: str) -> dict` — returns `{"tool": str, "args": dict}` via JSON structured output. Tool must be one of `list_files`, `read_file`, `search_in_file`.
-- [x] **M3.3** Implement `observe(state: InvestigationState, question: str, result: str) -> dict` — returns `{"note": Note, "decision": "continue"|"replan"|"conclude"}` via JSON structured output. Use `temperature=0.3`.
-- [x] **M3.4** Implement `replan(state: InvestigationState) -> list[str]` — returns revised remaining plan steps (does not include already-completed steps). Use `temperature=0.3`.
-- [x] **M3.5** Implement `conclude(state: InvestigationState) -> str` — generates the final prose report from `state.notes` only (not raw tool outputs). Report must address: findings, gaps, conflicts, and a conclusion on the original goal.
-
-**Prompt requirements for all functions:**
-- Inline prompts (f-strings), no separate prompt file
-- State summaries passed to LLM are always the current snapshot, never accumulated message history
-- `plan`, `select_tool`, `observe`, `replan` use `response_format={"type": "json_object"}`
-- `plan` and `select_tool` use `temperature=0`; `observe` and `replan` use `temperature=0.3`
-
-**Done when:** Each function can be called in isolation and returns the expected type without raising.
+## 🛠 Step 2: Build the Hands (File Tools)
+* **Goal:** Write the functions that allow the AI to look at the folders, read files, and search for keywords on the local computer.
+* **Status:** `[x]` Complete
+* **Tasks:**
+  * [x] Create `agent/tools.py`.
+  * [x] Write `list_files` to let the AI see all document names.
+  * [x] Write `read_file` to let the AI read a file (up to a safe size limit).
+  * [x] Write `search_in_file` to let the AI look for specific keywords in a document.
 
 ---
 
-## Milestone 4 — Runner (`agent/runner.py`)
-
-The loop. Imports from all three other agent files.
-
-- [x] **M4.1** Implement `_log(event: str, payload: dict)` — writes human-readable stdout line and appends a JSONL line to `logs/run_<timestamp>.jsonl`. Create `logs/` if absent.
-- [x] **M4.2** Implement `run_investigation(goal: str, documents_dir: str) -> str` — the main entry point as specified in `docs/architecture.md`. Sequence:
-  1. `list_files` to discover documents
-  2. `planner.plan` to build `state.plan`
-  3. While loop until `state.status != "investigating"` or `iterations >= MAX_ITERATIONS` (default: 20)
-  4. Each iteration: `select_tool` → tool dispatch via `match` → `observe` → decide `continue/replan/conclude`
-  5. On conclude or guard: `planner.conclude` → return report string
-- [x] **M4.3** Add CLI entry point: `if __name__ == "__main__"` block that reads `goal` from `sys.argv[1]` and `documents_dir` from `sys.argv[2]` (default: `data/documents`), then prints the returned report.
-- [x] **M4.4** Verify tool dispatch uses a `match` statement (not `getattr` or a dict of callables)
-
-**Done when:** `python agent/runner.py "Can Orion Capital safely acquire Nexus Legal Technologies?" data/documents` runs end-to-end, prints structured logs to stdout, writes a JSONL trace to `logs/`, and returns a non-trivial report.
+## 🧠 Step 3: Build the Brain (AI Instructions)
+* **Goal:** Write the prompts and logic that talk to OpenAI to plan, choose tools, take notes, and write reports.
+* **Status:** `[x]` Complete
+* **Tasks:**
+  * [x] Create `agent/planner.py`.
+  * [x] Implement the planning function (creates a checklist of 5–8 questions).
+  * [x] Implement tool selection (decides whether to read or search).
+  * [x] Implement observation logic (reads search results and decides if they show a fact, a missing file, or a contradiction).
+  * [x] Implement re-planning (rewrites questions if the AI gets stuck).
+  * [x] Implement report writing (writes the final prose summary).
 
 ---
 
-## Milestone 5 — End-to-end smoke test
-
-Manual verification before running the eval harness.
-
-- [ ] **M5.1** Run the agent on S1's goal with the full `data/documents` corpus. Confirm:
-  - Log shows `[PLAN]`, `[TOOL]`, `[OBSERVE]`, and `[CONCLUDE]` events
-  - At least one `[REPLAN]` or `[OBSERVE] decision=replan` triggered (the Imperial licence conflict should cause this)
-  - Final report mentions: IP assignment, Imperial College licence, Alpha & Partners, DataVault, Meridian Ventures, ICO
-- [ ] **M5.2** Run the agent with `data/documents` minus `nexus_litigation_register.txt`. Confirm:
-  - Agent flags litigation status as a gap
-  - Report does not fabricate litigation details
+## 🔄 Step 4: Build the Coordinator (The Main Loop)
+* **Goal:** Tie everything together so the AI can automatically plan, execute tools, observe, and repeat until done.
+* **Status:** `[x]` Complete
+* **Tasks:**
+  * [x] Create `agent/runner.py`.
+  * [x] Implement the logging system so progress prints nicely to the screen and saves to files in `logs/`.
+  * [x] Implement the main loop that coordinates steps 1 to 3.
+  * [x] Set a safety guard (maximum of 20 steps) so the AI never gets stuck looping forever.
 
 ---
 
-## Milestone 6 — Eval harness run
-
-The harness is already implemented (`eval/harness.py`). This milestone wires it to the agent.
-
-- [ ] **M6.1** Run `python eval/harness.py --scenario S1` and record the score
-- [ ] **M6.2** Run `python eval/harness.py --all --output results/eval_results.json`
-- [ ] **M6.3** Review scores. If any required criterion fails:
-  - Read the criterion's judge prompt in `eval/rubric.py`
-  - Trace which plan step and which `observe` output covers that criterion
-  - Fix the planner prompt (not the rubric) to improve coverage
-- [ ] **M6.4** Re-run `--all` after any prompt fixes. Target: all 5 required criteria pass on S1; S2–S4 meet their `minimum_required_pass` thresholds.
+## 🧪 Step 5: Run a Manual Test
+* **Goal:** Run the AI once by hand to make sure it runs smoothly without crashing.
+* **Status:** `[x]` Complete
+* **Tasks:**
+  * [x] Run the agent on the sample documents folder.
+  * [x] Verify that the logs print correctly and the final report contains details about technology ownership, contracts, and court cases.
+  * [x] Hide one file and verify that the AI notices and flags the gap.
 
 ---
 
-## Milestone 7 — README
-
-- [x] **M7.1** Write `README.md` covering:
-  - Setup (one command: `pip install openai`, set `OPEN_AI_KEY`)
-  - How to run the agent
-  - How to run the eval harness
-  - Architecture summary (4 files, 1 loop) with a pointer to `docs/architecture.md`
-  - Honest evaluation of at least one known weakness surfaced by the eval results
-
----
-
-## Implementation order
-
-```
-M1 (state) → M2 (tools) → M3 (planner) → M4 (runner) → M5 (smoke) → M6 (eval) → M7 (README)
-```
-
-M1 and M2 have no LLM dependency and can be verified offline. M3 requires the API key but each
-function is independently testable. M4 is last because it depends on all three.
+## 📊 Step 6: Run the Full Test Suite
+* **Goal:** Run the evaluation script against all 4 test cases to grade the AI.
+* **Status:** `[x]` Complete
+* **Tasks:**
+  * [x] Run the grading script for Test 1 (Happy Path).
+  * [x] Run all tests together and save the scores to `results/eval_results.json`.
+  * [x] Check the grading details and tweak the AI's instructions to improve the scores.
 
 ---
 
-## File checklist
-
-```
-agent/__init__.py          ← empty, M1.1
-agent/state.py             ← M1.2
-agent/tools.py             ← M2
-agent/planner.py           ← M3
-agent/runner.py            ← M4
-logs/                      ← created at runtime by M4.1
-results/                   ← created at runtime by M6.2
-README.md                  ← M7
-```
-
-Already complete:
-```
-eval/harness.py            ✓
-eval/rubric.py             ✓
-eval/scenarios.py          ✓
-eval/__init__.py           ✓
-data/documents/            ✓ (7 documents)
-docs/PRD.md                ✓
-docs/architecture.md       ✓
-```
+## 📖 Step 7: Document Everything
+* **Goal:** Write the main guides so anyone can install and run the project.
+* **Status:** `[x]` Complete
+* **Tasks:**
+  * [x] Write the `README.md` with simple setup instructions.
+  * [x] Document the system design in `docs/architecture.md`.

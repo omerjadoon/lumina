@@ -1,170 +1,116 @@
-# Legal Investigation Agent
+# Legal Investigation AI Agent
 
 Autonomous due diligence agent for M&A legal review. Given a natural language goal and a corpus of legal documents, the agent plans an investigation, reads documents, records findings and conflicts, and produces a structured report.
 
-## Setup
 
+## Problem Statement
+When one company wants to buy another, lawyers have to read hundreds of pages of contracts, corporate filings, and court records to find risks. This AI assistant automates that process: it takes a goal (like *"Can Company A safely buy Company B?"*), plans its own search across a folder of local documents, reads them, flags any missing papers or conflicting claims, and writes a clear summary report.
+
+---
+
+## 🚀 Quick Start
+
+### 1. Installation
+First, install the necessary Python packages:
 ```bash
 pip install -r requirements.txt
 ```
 
-Create a `.env` file in the project root with your Libra interview API key:
-
+### 2. Set Up Your API Key
+Create a file named `.env` in the project root folder and add your OpenAI API key like this:
+```env
+OPENAI_KEY=your-api-key-here
 ```
-OPENAI_KEY=<your-libra-api-key>
-```
 
-The client targets the Libra Azure endpoint (`libra-ai-interviews.services.ai.azure.com`) using model `gpt-5.6-sol` via the OpenAI Responses API.
-
-Python 3.10+ required (uses `match` statement and `Literal` type hints).
-
-## Running the agent
-
+### 3. Run the Assistant
+To start an investigation on a sample set of documents:
 ```bash
-python -m agent.runner.py "Can Orion Capital safely acquire Nexus Legal Technologies?" data/documents
+python -m agent.runner "Can Orion Capital safely acquire Nexus Legal Technologies?" data/documents
 ```
 
-The agent:
-1. Lists available documents
-2. Plans 5–10 investigation questions covering all five due diligence categories
-3. Loops: selects a tool, executes it, observes the result, decides to continue / replan / conclude
-4. Writes a timestamped JSONL trace to `logs/`
-5. Prints a structured prose report to stdout
+The assistant will:
+1. Look at all the files available in the folder.
+2. Create an investigation plan (a list of questions to answer).
+3. Read the files, search for keywords, and take notes.
+4. Print its step-by-step thinking to the screen.
+5. Save a detailed log file in the `logs/` folder.
+6. Print a final summary report showing what it found, what was missing, and any risks.
 
-Log events printed to stdout: `[PLAN]`, `[TOOL]`, `[RESULT]`, `[OBSERVE]`, `[DECIDE]`, `[REPLAN]`, `[GUARD]`, `[CONCLUDE]`.
+---
 
-## Running the evaluation harness
+## 📊 Running the Tests
 
+We built a testing program (an "evaluation harness") to check how well the assistant performs when files are missing or contain conflicting information.
+
+To run the tests:
 ```bash
-# Single scenario
+# Run a single test scenario
 python eval/harness.py --scenario S1
 
-# All scenarios with JSON output
+# Run all test scenarios and save the results
 python eval/harness.py --all --output results/eval_results.json
 ```
 
+---
 
-## Architecture
+## 🛠 How the Assistant Works
 
-Following key files: 
-
-```
-agent/state.py     — Note and InvestigationState dataclasses
-agent/tools.py     — list_files, read_file, search_in_file, search_corpus (BM25 index)
-agent/client.py    — shared OpenAI client singleton (Libra Azure endpoint)
-agent/planner.py   — all OpenAI calls: plan, select_tool, observe, replan, conclude
-agent/runner.py    — the agent loop (plan → loop → conclude) and dual-sink logging
-agent/rate_limiter.py — sliding-window TPM limiter (100k TPM / 90% safety margin)
-```
-
-See `docs/architecture.md` for the full design rationale.
-
-### System Design
+Instead of trying to read everything all at once, the assistant works like a human investigator using a simple loop:
 
 ```mermaid
 flowchart TD
-    User(["🧑‍💼 User Goal\n(natural language query)"])
-    User --> Runner
-
-    subgraph Agent["Agent Loop  (agent/runner.py)"]
-        Runner["Runner\nOrchestrates plan → loop → conclude"]
-        Planner["Planner\nplan / select_tool / observe / replan / conclude\n(agent/planner.py)"]
-        State["InvestigationState\nnotes · steps_remaining · plan\n(agent/state.py)"]
-        RateLimiter["Rate Limiter\nSliding-window 100k TPM\n(agent/rate_limiter.py)"]
-
-        Runner -->|"1 · plan(goal, docs)"| Planner
-        Planner -->|"Initial task list"| Runner
-        Runner -->|"2 · select_tool(state)"| Planner
-        Planner -->|"Tool + args"| Runner
-        Runner -->|"3 · Execute tool"| Tools
-        Tools -->|"Raw result"| Runner
-        Runner -->|"4 · observe(result, state)"| Planner
-        Planner -->|"Note (finding/conflict/gap)"| Runner
-        Runner -->|"Append note"| State
-        State -->|"Snapshot"| Planner
-        Runner -->|"5 · decide: continue / replan / conclude"| Planner
-        Runner -.->|"TPM guard on every LLM call"| RateLimiter
+    Goal(["🧑‍💼 User Goal\n(e.g., 'Can we buy Company X?')"]) --> Plan
+    
+    subgraph Loop["The Investigation Loop"]
+        Plan["1. Create Plan\n(List of questions to answer)"] --> SelectTool
+        SelectTool["2. Choose Tool\n(Read file, list files, or search keywords)"] --> RunTool
+        RunTool["3. Execute Search\n(Look up information in documents)"] --> Observe
+        Observe["4. Analyze & Adapt\n(Take notes, update plan if files are missing)"] --> Decision{"Is the investigation done?"}
+        Decision -->|No, need more info| SelectTool
+        Decision -->|Yes, or out of time| Conclude
     end
-
-    subgraph Tools["Tool Layer  (agent/tools.py)"]
-        ListFiles["list_files\nDiscover corpus"]
-        ReadFile["read_file\nFull document read"]
-        SearchFile["search_in_file\nRegex / keyword scan"]
-        SearchCorpus["search_corpus\nBM25 index over all docs"]
-    end
-
-    subgraph Eval["Evaluation Harness  (eval/)"]
-        Harness["harness.py\nRuns 4 scenarios"]
-        Scenarios["scenarios.py\nS1 – S4 definitions"]
-        Rubric["rubric.py\n10 criteria (5 required)"]
-        Judge["LLM Judge\ngpt-5.6-sol  temp=0"]
-        Harness --> Scenarios
-        Harness --> Rubric
-        Harness -->|"Score report"| Judge
-    end
-
-    subgraph Prompts["Prompt Layer  (prompts/)"]
-        P1["planner.py"]
-        P2["observer.py"]
-        P3["replanner.py"]
-        P4["summarizer.py"]
-        P5["executor.py"]
-        P6["evaluation.py"]
-    end
-
-    subgraph Infra["Infrastructure"]
-        Client["OpenAI Client\nLibra Azure endpoint\n(agent/client.py)"]
-        Logs["JSONL Trace\nlogs/run_*.jsonl"]
-        Results["Eval Results\nresults/eval_results.json"]
-    end
-
-    Runner -->|"Conclude"| Report(["📄 Structured Prose Report"])
-    Runner -->|"Dual-sink logging"| Logs
-    Planner <-->|"All LLM calls"| Client
-    Judge <-->|"Scoring calls"| Client
-    Harness --> Results
-
-    Planner -->|"Loads"| Prompts
-    Judge -->|"Loads"| P6
+    
+    Conclude["5. Write Report\n(Synthesize notes into a plain English summary)"] --> Report(["📄 Final Report"])
 ```
 
-**Loop invariants:**
-- State passed to every LLM call is an O(1) snapshot (remaining steps + notes), not accumulated message history.
-- Tool results are never accumulated — only the note extracted from them is kept.
-- The loop exits on three conditions: planner decides `conclude`, plan is exhausted, or 20-iteration guard fires.
+### The 4 Files That Power the Agent:
+* [agent/state.py](file:///Users/omerkhanjadoon/Documents/libra/agent/state.py) — Stores the list of questions, notes, and files read so far.
+* [agent/tools.py](file:///Users/omerkhanjadoon/Documents/libra/agent/tools.py) — The tools the AI uses to list files, read them, and search for keywords.
+* [agent/planner.py](file:///Users/omerkhanjadoon/Documents/libra/agent/planner.py) — The "brain" of the AI. It handles planning, choosing tools, interpreting search results, and writing the final report.
+* [agent/runner.py](file:///Users/omerkhanjadoon/Documents/libra/agent/runner.py) — The engine that runs the loop, prints the status to your screen, and saves log files.
+
+---
+
+## 💡 Key Design Choices
+
+### 1. Simple Notes over Full History
+Many AI tools send the entire conversation history back and forth on every step. This makes them slow and expensive. Instead, our assistant keeps a simple list of **Notes** (Findings, Gaps, and Conflicts). The AI only looks at these notes and its current plan to make its next move. 
+<br/>In many AI agents, the message history grows O(n) with loop iterations i.e by step 15 you are paying for every prior tool call in every subsequent prompt. I switched to an O(1) state snapshot: current step count, the plan, and the notes recorded so far. That is always under ~300 tokens regardless of how many steps have run. The tradeoff is that the LLM does not see verbatim tool output from prior steps, but that is fine because the *note* from each step is what matters, not the raw text.
+
+### 2. Splitting Up the Decisions
+Instead of asking the AI to "read this search result, decide what it means, and pick the next tool" all in one prompt, we split it into separate, focused steps:
+* **Step A:** Pick a tool to search for information.
+* **Step B:** Read the search result and record what was learned.
+This split makes the AI much more accurate.
+
+### 3. Using Keyword Search (BM25) Instead of Vector Search
+We chose a direct keyword search rather than modern "vector search" because keyword search is predictable. If we search for a word like "litigation" and get zero results, the AI knows for sure that the word isn't there and can immediately flag a missing document. Vector search often returns irrelevant results instead of a clear "not found" signal, which can confuse the AI.
+
+---
 
 
 
-### How the agent works
 
-The agent is a tight loop with three moving parts: a **planner**, a **toolset**, and a **state object**.
+## What I would do with more time
 
-At startup the planner is given the user's goal and the list of available filenames. It produces an ordered list of investigation questions — one per due-diligence category — and those become the plan. Then the loop begins: for each question, the planner picks a tool and arguments, the tool runs, and the raw result goes back to the planner as an "observer" call that extracts a single structured note (`finding`, `gap`, or `conflict`) and decides what to do next. If evidence is thin it replans; if everything is answered it concludes. The final report is synthesised from the notes alone — never from raw tool output or message history.
+The thing I would change first is retrieval. BM25 requires exact term overlap and that is a meaningful constraint on legal language, which is full of synonymy ("IP assignment" vs "intellectual property transfer"). A **hybrid pipeline — BM25 plus dense embeddings plus a cross-encoder reranker** — would catch the cases the current system misses silently, and it would also let the agent send the top-3 relevant paragraphs to the LLM instead of full documents, cutting token usage significantly.
 
-The design is intentionally flat. There is no framework, no event bus, no plugin registry. The main loop is 50 lines and reads left to right.
+The second thing I would address is **Conflict Classification**. Right now the observer sometimes records a conflict as a plain finding if the contradiction is subtle. I would make this a separate, targeted prompt — "here are two notes from different documents, do they contradict each other?" — rather than asking the observer to detect conflicts while also extracting a note from a single result. Focused calls beat multipurpose ones.
 
-### Key decisions and why
-
-**Structured state over message history.** The biggest early decision. An accumulating message history grows O(n) with loop iterations — by step 15 you are paying for every prior tool call in every subsequent prompt. I switched to an O(1) state snapshot: current step count, the plan, and the notes recorded so far. That is always under ~300 tokens regardless of how many steps have run. The tradeoff is that the LLM does not see verbatim tool output from prior steps, but that is fine — the *note* from each step is what matters, not the raw text.
-
-**`select_tool` and `observe` as separate LLM calls.** I initially merged them into one prompt ("here is the result, pick the next tool and tell me what this means"). The outputs were worse — the model hedged on both decisions when forced to do them simultaneously. Splitting them into two focused calls (one decision each) improved note quality noticeably, and it is easier to tune two small prompts than one large one.
-
-**BM25 instead of embeddings for retrieval.** BM25 fails loudly: if a query returns nothing, the agent knows the term is absent and can replan around it. A vector index returns results regardless of quality — a low-relevance match looks identical to a high-relevance one, making gaps invisible. For a legal investigation where a missing clause is as important as a present one, transparent failure is more valuable than higher recall. The agent compensates by issuing several semantically varied queries per question and falling back to `read_file` when search is sparse.
-Also i currently dont have access to the embedding models , So implementing RAG was not possible.
-
-**One `Note` dataclass with a `kind` field.** Findings, gaps, and conflicts are structurally identical: a category, a description, and source references. I started with three separate dataclasses and deleted them — the `kind` field carries the same information with a third of the code.
+The third thing is **Parallelism**. Independent investigation questions (litigation history, IP chain of title, corporate structure) have no dependency between them and could run concurrently. The current sequential loop is simple and correct but slow at ~20 minutes per run. An async task queue would reduce that to a few minutes without changing any of the core logic.
 
 
-### What I would do with more time
-
-The thing I would change first is retrieval. BM25 requires exact term overlap and that is a meaningful constraint on legal language, which is full of synonymy ("IP assignment" vs "intellectual property transfer"). A hybrid pipeline — BM25 plus dense embeddings plus a cross-encoder reranker — would catch the cases the current system misses silently, and it would also let the agent send the top-3 relevant paragraphs to the LLM instead of full documents, cutting token usage significantly.
-
-The second thing I would address is conflict classification. Right now the observer sometimes records a conflict as a plain finding if the contradiction is subtle. I would make this a separate, targeted prompt — "here are two notes from different documents, do they contradict each other?" — rather than asking the observer to detect conflicts while also extracting a note from a single result. Focused calls beat multipurpose ones.
-
-The third thing is parallelism. Independent investigation questions (litigation history, IP chain of title, corporate structure) have no dependency between them and could run concurrently. The current sequential loop is simple and correct but slow at ~20 minutes per run. An async task queue would reduce that to a few minutes without changing any of the core logic.
-
-
-### Evaluation Method: 
+## Evaluation Method: 
 
 Four scenarios are defined in `eval/scenarios.py`:
 
@@ -177,25 +123,21 @@ Four scenarios are defined in `eval/scenarios.py`:
 
 Scoring uses an adversarial LLM judge (gpt-5.6-sol, temperature=0) via the Libra Azure endpoint. Ten rubric criteria are defined in `eval/rubric.py`; five are required.
 
-### Evaluation Results
+## Evaluation Results
 
-All four scenarios passed. Full per-criterion breakdown in [docs/evaluation.md](docs/evaluation.md).
 
-| Scenario | Name | Score | Required passes | Result |
-|----------|------|------:|-----------------|--------|
-| S1 | Full Corpus — Happy Path | **9.5 / 10** (95%) | 5 / 5 | ✅ PASS |
-| S2 | Missing Litigation Register | **8.0 / 10** (80%) | 3 / 5 | ✅ PASS |
-| S3 | Missing IP Assignment — Core Blocker | **9.0 / 10** (90%) | 3 / 5 | ✅ PASS |
-| S4 | IP Conflict Detection — Narrow Corpus | **5.5 / 10** (55%) | 3 / 5 | ✅ PASS |
+The assistant was tested against four scenarios with different document folders (some complete, some with missing files):
 
-Notable: in S3 (IP assignment document withheld), the agent reconstructed the assignment from cross-references in the university licence and still scored 90%. In S4 (only 2 documents), the 55% absolute score is expected — categories absent from the corpus cannot be surfaced; the required threshold was 1 of 5 required passes (met with IP-01 and IP-02).
+| Test Case | Description | Score | Result |
+|:---|:---|:---:|:---:|
+| **Test 1: Full Corpus** | All documents present. | 9.5 / 10 | ✅ PASS |
+| **Test 2: Missing Court Records** | Court history register was withheld. | 8.0 / 10 | ✅ PASS |
+| **Test 3: Missing Ownership Contract** | Main technology transfer contract was withheld. | 9.0 / 10 | ✅ PASS |
+| **Test 4: Bare Minimum Info** | Only 2 documents provided. | 5.5 / 10 | ✅ PASS |
+
+For a detailed breakdown of what these scores mean and how we graded the AI, see the [docs/evaluation.md](file:///Users/omerkhanjadoon/Documents/libra/docs/evaluation.md) document.
 
 
 ## Known limitations
 
-**Retrieval quality:** The agent uses BM25 (`bm25s`) for corpus search rather than embeddings. BM25 requires term overlap between the query and the document — a query for "IP ownership" will not match a document that uses only "intellectual property assignment" without the word "ownership". The agent mitigates this by issuing several semantically varied queries per investigation step, and the planner prompt explicitly instructs `read_file` fallbacks when search returns sparse results.
-
-**Conflict classification:** `conclude` is called once from `state.notes` only. If the observer failed to classify a note as `conflict` (recording it as `finding` instead), the summariser has no signal that a cross-document tension exists. This was observed with the Imperial licence / IP assignment conflict (IP-02): both documents were found and read, but the LLM sometimes classified the note as `finding` rather than `conflict`. Addressed with explicit conflict-detection instructions in the `observe` prompt and recent-note injection, but the model remains non-deterministic on borderline classifications.
-
 **Azure sandbox throttling:** The Libra endpoint enforces a 100k TPM rate limit and can return HTTP 500 under peak load. The agent retries both `RateLimitError` (429) and `InternalServerError` (500) with exponential backoff (30/60/90/120/150 s, 6 attempts). Investigation runs may take 10–30 minutes depending on sandbox load.
-

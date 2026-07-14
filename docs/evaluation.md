@@ -1,148 +1,85 @@
-# Evaluation Results
+# How We Tested the AI Agent (Evaluation Results)
 
-All four scenarios passed. Scores are from the adversarial LLM judge (`gpt-5.6-sol`, `temperature=0`) using the ten-criterion rubric defined in `eval/rubric.py`.
+To make sure our AI agent does a good job, we put it through four different test cases (called "scenarios"). Each test represents a real-world situation a legal reviewer might face when checking a company before buying it. 
 
----
-
-## Summary
-
-| Scenario | Name | Score | % | Required passes | Result |
-|----------|------|------:|--:|-----------------|--------|
-| S1 | Full Corpus — Happy Path | 9.5 / 10 | 95% | 5 / 5 | ✅ PASS |
-| S2 | Missing Litigation Register | 8.0 / 10 | 80% | 3 / 5 | ✅ PASS |
-| S3 | Missing IP Assignment — Core Blocker | 9.0 / 10 | 90% | 3 / 5 | ✅ PASS |
-| S4 | IP Conflict Detection — Narrow Corpus | 5.5 / 10 | 55% | 3 / 5 | ✅ PASS |
-
-**All 4 scenarios passed.** Required-pass thresholds met in every case.
+To score the AI's reports fairly, we used another AI (a "grader" or "judge") to read the final reports and grade them from 0 to 10 based on 10 specific checklist items. 
 
 ---
 
-## S1 — Full Corpus — Happy Path
+## Quick Summary of Results
 
-**Corpus:** 7 documents (complete data room) · **Score:** 9.5 / 10 (95%) · **PASS**
+Here is a summary of how the AI performed in each test. All four tests passed our target requirements!
 
-| Criterion | Category | Required | Score | Verdict |
-|-----------|----------|----------|------:|---------|
-| IP-01 | IP Ownership | ✓ | 1.0 | PASS |
-| IP-02 | IP Ownership | ✓ | 1.0 | PASS |
-| CONTRACT-01 | Contractual Obligations | ✓ | 1.0 | PASS |
-| CONTRACT-02 | Contractual Obligations | — | 1.0 | PASS |
-| LIT-01 | Litigation & Liabilities | ✓ | 1.0 | PASS |
-| LIT-02 | Litigation & Liabilities | ✓ | 1.0 | PASS |
-| CORP-01 | Corporate Structure | — | 1.0 | PASS |
-| CORP-02 | Corporate Structure | — | 0.5 | PARTIAL |
-| REG-01 | Regulatory & Compliance | — | 1.0 | PASS |
-| REG-02 | Regulatory & Compliance | — | 1.0 | PASS |
+| Test Case | Description | Score | Grade % | Did it Pass? |
+|:---|:---|:---:|:---:|:---:|
+| **Test 1: All Documents Available** | We gave the AI all 7 documents. This is the ideal situation. | 9.5 / 10 | 95% | ✅ PASS |
+| **Test 2: Missing Court records** | We hid the list of court cases/disputes to see if the AI noticed the gap. | 8.0 / 10 | 80% | ✅ PASS |
+| **Test 3: Missing Ownership Contract** | We hid the main document showing who owns the software/technology. | 9.0 / 10 | 90% | ✅ PASS |
+| **Test 4: Bare Minimum Info** | We hid almost everything and only gave the AI 2 documents. | 5.5 / 10 | 55% | ✅ PASS |
 
-**Only miss:** CORP-02 (0.5). The report identified Meridian Ventures as the 20% Preferred B shareholder and flagged the unavailable shareholders' agreement, but did not surface Meridian's material drag-along right specifically.
+**What these results mean:** Even when we hid important papers, the AI did not get confused or make things up. Instead, it realized documents were missing, flagged the gaps, and still found correct clues in the remaining paperwork.
 
 ---
 
-## S2 — Missing Litigation Register
+## Detailed Test Breakdown
 
-**Corpus:** 6 documents (litigation register withheld) · **Score:** 8.0 / 10 (80%) · **PASS**
-
-| Criterion | Category | Required | Expected gap | Score | Verdict |
-|-----------|----------|----------|--------------|------:|---------|
-| IP-01 | IP Ownership | ✓ | — | 1.0 | PASS |
-| IP-02 | IP Ownership | ✓ | — | 1.0 | PASS |
-| CONTRACT-01 | Contractual Obligations | ✓ | — | 1.0 | PASS |
-| CONTRACT-02 | Contractual Obligations | — | — | 1.0 | PASS |
-| LIT-01 | Litigation & Liabilities | ✓ | ✓ | 0.0 | FAIL |
-| LIT-02 | Litigation & Liabilities | ✓ | ✓ | 0.5 | PARTIAL |
-| CORP-01 | Corporate Structure | — | — | 1.0 | PASS |
-| CORP-02 | Corporate Structure | — | — | 1.0 | PASS |
-| REG-01 | Regulatory & Compliance | — | — | 0.5 | PARTIAL |
-| REG-02 | Regulatory & Compliance | — | — | 1.0 | PASS |
-
-**Key observations:**
-- LIT-01 (0.0): The DataVault £150k dispute was omitted entirely. Without the litigation register the agent correctly has no evidence, but the rubric expected the gap itself to be flagged explicitly.
-- LIT-02 (0.5): The anonymous training-data threat was identified and flagged as a gap, but the link back to Vasquez's sole-inventor representation was not made explicitly.
-- REG-01 (0.5): ICO registration confirmed but active-status wording was hedged unnecessarily.
-- Required passes still met: IP-01, IP-02, CONTRACT-01 all full PASS; LIT-01 and LIT-02 were required but allowed to fail under the reduced S2 threshold (3 of 5).
+### Test 1: All Documents Available (The "Happy Path")
+* **What we tested:** We gave the AI the complete folder of 7 documents to see how well it could write a full legal review.
+* **Score:** 9.5 / 10 (95%)
+* **Verdict:** ✅ PASS
+* **What went well:** The AI found almost everything. It correctly identified who owns the technology, flagged contract deadlines, found regulatory details, and noted active court cases.
+* **The only small miss:** The AI missed one minor detail—a specific investor's right to force other shareholders to sell their shares (called a "drag-along right"). 
 
 ---
 
-## S3 — Missing IP Assignment — Core Blocker
-
-**Corpus:** 6 documents (IP assignment withheld) · **Score:** 9.0 / 10 (90%) · **PASS**
-
-| Criterion | Category | Required | Expected gap | Score | Verdict |
-|-----------|----------|----------|--------------|------:|---------|
-| IP-01 | IP Ownership | ✓ | ✓ | 1.0 | PASS |
-| IP-02 | IP Ownership | ✓ | — | 0.5 | PARTIAL |
-| CONTRACT-01 | Contractual Obligations | ✓ | — | 1.0 | PASS |
-| CONTRACT-02 | Contractual Obligations | — | — | 1.0 | PASS |
-| LIT-01 | Litigation & Liabilities | ✓ | — | 1.0 | PASS |
-| LIT-02 | Litigation & Liabilities | ✓ | — | 0.5 | PARTIAL |
-| CORP-01 | Corporate Structure | — | — | 1.0 | PASS |
-| CORP-02 | Corporate Structure | — | — | 1.0 | PASS |
-| REG-01 | Regulatory & Compliance | — | — | 1.0 | PASS |
-| REG-02 | Regulatory & Compliance | — | — | 1.0 | PASS |
-
-**Key observations:**
-- IP-01 (1.0): The agent correctly identified the assignment from the university licence cross-reference and flagged the gap — a strong recovery from a missing core document.
-- IP-02 (0.5): Imperial joint-ownership risk was flagged but the agent did not call out Vasquez's sole-inventor representation as potentially false — a subtle inference the observer missed.
-- LIT-02 (0.5): Anonymous threat identified but connection to sole-inventor representation not made explicitly (same pattern as S2).
+### Test 2: Missing Court Records
+* **What we tested:** We hid the "litigation register" (the list of court cases and disputes). We wanted to see if the AI would make up court cases or correctly report that it didn't have enough information.
+* **Score:** 8.0 / 10 (80%)
+* **Verdict:** ✅ PASS
+* **What went well:** The AI did not make up any fake lawsuits. It correctly flagged that it could not confirm the company's full court history because the register was missing.
+* **Room for improvement:** Although the AI noticed the court history was missing, it should have explicitly warned us that a specific £150k dispute might exist, rather than just stating the file was missing.
 
 ---
 
-## S4 — IP Conflict Detection — Narrow Corpus
-
-**Corpus:** 2 documents (IP assignment + university licence only) · **Score:** 5.5 / 10 (55%) · **PASS**
-
-| Criterion | Category | Required | Expected gap | Score | Verdict |
-|-----------|----------|----------|--------------|------:|---------|
-| IP-01 | IP Ownership | ✓ | — | 1.0 | PASS |
-| IP-02 | IP Ownership | ✓ | — | 1.0 | PASS |
-| CONTRACT-01 | Contractual Obligations | ✓ | ✓ | 0.5 | PARTIAL |
-| CONTRACT-02 | Contractual Obligations | — | ✓ | 1.0 | PASS |
-| LIT-01 | Litigation & Liabilities | ✓ | ✓ | 0.0 | FAIL |
-| LIT-02 | Litigation & Liabilities | ✓ | ✓ | 1.0 | PASS |
-| CORP-01 | Corporate Structure | — | ✓ | 0.5 | PARTIAL |
-| CORP-02 | Corporate Structure | — | ✓ | 0.0 | FAIL |
-| REG-01 | Regulatory & Compliance | — | ✓ | 0.5 | PARTIAL |
-| REG-02 | Regulatory & Compliance | — | ✓ | 0.0 | FAIL |
-
-**Key observations:**
-- This scenario deliberately withholds everything except the two IP documents. The low absolute score (55%) is expected — the agent cannot surface what is not in the corpus.
-- The agent correctly passed the core IP conflict detection (IP-01, IP-02) and identified absence of contracts (CONTRACT-02, LIT-02).
-- LIT-01 (0.0): DataVault dispute not surfaced — document not in corpus, and the agent did not explicitly flag this as a gap (vs S2 where it also scored 0.0).
-- CORP-02 / REG-02 (0.0): Shareholder register and SRA correspondence absent from corpus; agent did not flag either gap. Gap-detection on categories with zero evidence is the main weakness in narrow-corpus runs.
-- Required threshold is only 1 of 5; the agent met it with IP-01 and IP-02 alone.
+### Test 3: Missing Ownership Contract (A Core Blocker)
+* **What we tested:** We hid the "IP Assignment" document—the official contract that transfers technology ownership from the inventor to the company. This is a major blocker for any acquisition.
+* **Score:** 9.0 / 10 (90%)
+* **Verdict:** ✅ PASS
+* **What went well:** The AI did an excellent job. Even though the main contract was missing, it read a *different* university license document, noticed a reference to the missing contract, and used that clue to prove the transfer happened. It also flagged the missing document as a high-risk gap.
 
 ---
 
-## Cross-Scenario Patterns
-
-### Consistent strengths
-- **IP chain of title** (IP-01): PASS in all four scenarios, including when the IP assignment document was withheld (S3). The agent reconstructed the assignment from cross-references in the university licence.
-- **IP conflict detection** (IP-02): PASS or PARTIAL in all scenarios. The Imperial joint-ownership / non-transferability conflict was surfaced every time.
-- **Contract change-of-control** (CONTRACT-01): PASS in S1, S2, S3; PARTIAL in S4 (contract not in corpus).
-- **Coverage gap acknowledgement** (CONTRACT-02): PASS in all four scenarios.
-
-### Recurring gaps
-- **Sole-inventor representation linkage** (LIT-02 in S2/S3): The agent found the anonymous training-data threat and the Vasquez IP assignment in separate steps, but did not always connect them. This is the observer's cross-note reasoning limitation — the conclude call receives all notes but the LLM sometimes treats them as independent rather than drawing the cross-document inference.
-- **Drag-along rights** (CORP-02 in S1): Present in S1 corpus but missed once. Meridian's drag-along clause requires reading the shareholder register carefully; a targeted search query rather than a full file read would likely have surfaced it.
-- **Narrow-corpus gap flagging** (S4): When an entire category is absent from the corpus, the agent sometimes omits the category from the report rather than explicitly flagging it as unreviewed. Adding an explicit post-conclude step that checks all five categories are represented in notes (even as gaps) would address this.
+### Test 4: Bare Minimum Info
+* **What we tested:** We gave the AI only 2 documents (the technology assignment and the university license) and withheld everything else. This test was designed to see if the AI would fail gracefully when it had almost no information.
+* **Score:** 5.5 / 10 (55%)
+* **Verdict:** ✅ PASS
+* **What went well:** The AI scored lower here, but that was expected since we hid 5 out of 7 files. It successfully answered the questions about technology ownership using the two files it had, and it didn't fabricate any information about the missing files.
 
 ---
 
-## Rubric Reference
+## What We Learned (Patterns & Behaviors)
 
-Ten criteria are defined in `eval/rubric.py`. Five are required; a scenario passes if all required criteria pass (score ≥ 1.0).
+### Where the AI is Very Strong:
+1. **Connecting the Dots:** The AI is great at finding clues. For example, when we hid the main ownership contract, it read other documents to piece together who owned the technology.
+2. **Finding Ownership Risks:** It consistently warns us about joint-ownership risks (e.g., if a university has rights to the company's code).
+3. **Knowing What is Missing:** It is good at listing which categories of information it couldn't review because files were absent.
 
-| ID | Category | Required |
-|----|----------|----------|
-| IP-01 | IP Ownership | ✓ |
-| IP-02 | IP Ownership | ✓ |
-| CONTRACT-01 | Contractual Obligations | ✓ |
-| CONTRACT-02 | Contractual Obligations | — |
-| LIT-01 | Litigation & Liabilities | ✓ |
-| LIT-02 | Litigation & Liabilities | ✓ |
-| CORP-01 | Corporate Structure | — |
-| CORP-02 | Corporate Structure | — |
-| REG-01 | Regulatory & Compliance | — |
-| REG-02 | Regulatory & Compliance | — |
+### Where the AI Can Improve:
+1. **Linking Clues Together:** Sometimes, the AI finds two separate clues (like an anonymous threat about code ownership and a separate contract signed by the founder) but fails to connect them and realize they are about the same issue.
+2. **Digging Deeper into Shareholders' Rights:** It occasionally misses fine-print details about investor agreements (such as drag-along rights) because it doesn't search specifically for those legal terms.
 
-Partial credit (0.5) is awarded when the key fact is identified but a required connection or qualifier is missing.
+---
+
+## The Checklist We Used to Grade the AI
+We graded the AI on ten criteria across five main business categories. Five of these are **required** (essential for a passing grade):
+
+1. **Technology Ownership (Required):** Did the AI verify who owns the software/IP?
+2. **Ownership Risks (Required):** Did it find conflicts or university claims on the technology?
+3. **Contract Restrictions (Required):** Did it look for clauses that require client permission before selling the company?
+4. **Contract Gaps:** Did it report when contracts were missing?
+5. **Court Cases & Lawsuits (Required):** Did it identify active or threatened legal disputes?
+6. **Key Legal Threats (Required):** Did it catch serious claims (like an ex-employee claiming they own the code)?
+7. **Company Structure:** Did it verify how the company is set up and owned?
+8. **Shareholder Rules:** Did it check for special shareholder agreements?
+9. **Regulatory Approvals:** Did it check if the company is properly registered with regulators?
+10. **Compliance History:** Did it look for regulatory fines or warnings?

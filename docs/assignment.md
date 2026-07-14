@@ -1,89 +1,68 @@
-# AI Engineering Take-Home
+# AI Engineering Take-Home Challenge
 
-*(Example inspiration: long-running agent tools such as Cursor — plan → act → observe → adapt, with visibility into each step. You are free to design your own approach.)*
-
-## The Challenge
-
-Build a small AI agent that carries out long-running, multi-step tasks on a user's behalf.
-
-The user describes a high-level goal, your agent breaks it into work, executes it using tools, and returns a result.
-
-You pick the domain (research assistant, coding helper, ops assistant, document analyst, project planner, or anything else you can demonstrate well) and the interaction model (CLI, chat, or a minimal UI).
-
-The interesting part is **not** the happy path. Long-running tasks rarely go exactly to plan, and a fixed sequence of prompts will not get you far. We're interested in how your agent decides what to do next, keeps track of where it is, and copes when things don't go smoothly. How you approach that is entirely up to you, and it's a large part of what we're looking at.
-
-> **Important:** Please **do not** use agent frameworks (LangChain, LangGraph, AutoGen, CrewAI, etc.). We want to see **your own** agent loop, prompts, and context handling. Thin, non-agent libraries (such as an HTTP client, a vector store, or the provider SDK) are perfectly fine.
+This document outlines the challenge requirements for building the Legal Investigation AI Agent.
 
 ---
 
-## Keep It Simple
+## 🎯 The Challenge: What to Build
 
-We are **not** looking for a reusable agent framework or a platform.
+Build a small AI assistant that can execute long, multi-step tasks on a user's behalf. 
 
-We want the **simplest harness that does the job well**.
+The user describes a high-level goal, and your assistant:
+1. Breaks it down into smaller steps.
+2. Executes those steps using tools.
+3. Adapts when things go wrong (e.g., if a file is missing or information conflicts).
+4. Returns a final report.
 
-Developing a solution that's unnecessarily complex will count against you. A narrow, polished, well-understood agent is better than an ambitious but half-finished one.
-
----
-
-## Evaluation
-
-How do you know your agent is any good?
-
-Build a **runnable evaluation harness**, use it to evaluate your own agent, and tell us what you learned and what you'd improve.
-
-We care more about sound thinking than breadth.
+> **CRITICAL RULE:** Do **not** use agent frameworks like LangChain, LangGraph, AutoGen, or CrewAI. We want to see your own custom loops, prompts, and memory handling. You can use standard libraries (like the OpenAI SDK or a simple search library).
 
 ---
 
-## Deliverables
+## 💡 Keep It Simple
 
-### 1. Source Code
-- Public Git repository
-- Clear project structure
-- Run instructions
+We are **not** looking for a complex, general-purpose platform. 
 
-### 2. README
-In your own words:
-- How your agent works
-- Key design decisions and why you made them
-- What you would do with more time
-
-### 3. Evaluation Harness
-- A runnable evaluation harness
-- Results from running it against your agent
-
-### 4. Example Run
-A real task executed from start to finish.
-
-### 5. Short Video (3–5 minutes)
-Explain:
-- How your agent works
-- How information and tools flow through the system
-- How you would extend it
-
-### 6. Build Session Logs
-Assuming you used AI tools to help build your solution (e.g., Claude Code, Codex, Copilot, etc.), export **all raw session logs** into a `build_sessions/` directory.
-
-Do **not** edit these logs—we want to see how you work.
+We want the **simplest code that does the job well**. 
+Building something unnecessarily complex will count against you. A narrow, highly polished, and well-understood assistant is much better than an ambitious but half-finished one.
 
 ---
 
-## Time
+## 📊 How It Is Graded
 
-Aim for roughly **4–6 hours**, although it's ultimately up to you.
+To verify how good your assistant is, you must build a **runnable testing script (evaluation harness)**. Use this script to grade your own assistant, and document what you learned and what you would improve.
 
-Spend your time where you think it best demonstrates your judgment, and explain in the README:
-- How you allocated your time
-- What trade-offs you made
+We score the project based on four areas:
+
+| Area | Weight | What We Look For |
+|:---|:---:|:---|
+| **System Design & Loop** | **40%** | How the assistant makes decisions, adapts to missing information, and tracks its state. |
+| **Testing & Evaluation** | **30%** | The quality of your test script and the honesty of your insights. |
+| **Prompts & Instructions** | **15%** | How clear and effective your instructions to the AI are. |
+| **Code Quality & Simplicity** | **15%** | How readable, clean, and simple your code is. |
 
 ---
 
-# How We Evaluate
+## 📦 What You Need to Hand In (Deliverables)
 
-| Area | Weight |
-|------|-------:|
-| Harness engineering (agent loop, decision making, adaptation, context/state handling, robustness, observability/tracing) | **40%** |
-| Evaluation (quality of the evaluation harness and insights from the results) | **30%** |
-| Prompt and context engineering | **15%** |
-| Code quality, simplicity, and engineering judgment | **15%** |
+1. **Source Code:** A clean, organized, public Git repository with clear instructions on how to run it.
+2. **README:** A document explaining in plain English:
+   * How your assistant works.
+   * Why you made key design decisions.
+   * What you would do if you had more time.
+3. **Testing Script:** A runnable script that tests the assistant, along with a file containing the test results.
+4. **Example Run:** A saved log showing a full run from start to finish.
+5. **Short Video (3–5 minutes):** A quick walkthrough explaining:
+   * How the assistant works.
+   * How information flows through the system.
+   * How you would expand it in the future.
+6. **Build Logs:** Exported chat logs showing how you used AI coding assistants (like Claude, Copilot, etc.) to help build the project. Do not edit these logs.
+
+---
+
+## ⏱ Time Allocation
+
+Aim to spend roughly **4 to 6 hours** on this challenge. 
+
+Use your time wisely to demonstrate good engineering judgment. In your README, explain:
+* How you spent your time.
+* What shortcuts or trade-offs you had to make.

@@ -1,17 +1,39 @@
 flowchart TD
-A([User Goal])-->B[Planner]
-B-->C[Generate Initial Investigation Tasks]
-C-->D[Task Queue]
-D-->E[Select Next Task]
-E-->F[Tool Decision]
-F-->G[Search Corpus / Read File]
-G-->H[Observation]
-H-->I{Observation Type}
-I-->|Finding|J[Mark Task Complete]
-I-->|Conflict|K[Insert New Task]
-I-->|Gap|L[Retry]
-L-->E
-K-->D
-J-->N{More Tasks?}
-N-->|Yes|E
-N-->|No|O[Final Report]
+    %% Nodes
+    A([🎯 User Goal]) --> B[🤖 Planner]
+    B --> C[📋 Generate Initial Tasks]
+    C --> D[(🗂️ Task Queue)]
+
+    subgraph Loop [Investigation Loop]
+        E[Select Next Task] --> F[🛠️ Tool Decision]
+        F --> G[🔍 Search Corpus / Read File]
+        G --> H[📝 Observation & Analysis]
+        H --> I{❓ Observation Type}
+        
+        I -->|Finding| J[✅ Mark Task Complete]
+        I -->|Conflict| K[⚠️ Conflict: Insert Task]
+        I -->|Gap| L[🔄 Gap: Retry Task]
+        
+        L --> E
+        J --> N{❓ More Tasks?}
+        N -->|Yes| E
+    end
+
+    D --> E
+    K --> D
+    N -->|No| O([📄 Final Report])
+
+    %% Styling
+    classDef startEnd fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#0d47a1;
+    classDef process fill:#f5f5f5,stroke:#424242,stroke-width:2px,color:#212121;
+    classDef decision fill:#fff8e1,stroke:#ff8f00,stroke-width:2px,color:#5d4037;
+    classDef db fill:#efebe9,stroke:#4e342e,stroke-width:2px,color:#3e2723;
+    classDef success fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#1b5e20;
+    classDef alert fill:#ffebee,stroke:#c62828,stroke-width:2px,color:#b71c1c;
+
+    class A,O startEnd;
+    class B,C,E,F,G,H process;
+    class D db;
+    class I,N decision;
+    class J,L success;
+    class K alert;

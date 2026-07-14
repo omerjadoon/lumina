@@ -57,21 +57,50 @@ python eval/harness.py --all --output results/eval_results.json
 
 Instead of trying to read everything all at once, the assistant works like a human investigator using a simple loop:
 
+
 ```mermaid
 flowchart TD
-    Goal(["🧑‍💼 User Goal\n(e.g., 'Can we buy Company X?')"]) --> Plan
-    
-    subgraph Loop["The Investigation Loop"]
-        Plan["1. Create Plan\n(List of questions to answer)"] --> SelectTool
-        SelectTool["2. Choose Tool\n(Read file, list files, or search keywords)"] --> RunTool
-        RunTool["3. Execute Search\n(Look up information in documents)"] --> Observe
-        Observe["4. Analyze & Adapt\n(Take notes, update plan if files are missing)"] --> Decision{"Is the investigation done?"}
-        Decision -->|No, need more info| SelectTool
-        Decision -->|Yes, or out of time| Conclude
+    %% Nodes
+    A([🎯 User Goal]) --> B[🤖 Planner]
+    B --> C[📋 Generate Initial Tasks]
+    C --> D[(🗂️ Task Queue)]
+
+    subgraph Loop [Investigation Loop]
+        E[Select Next Task] --> F[🛠️ Tool Decision]
+        F --> G[🔍 Search Corpus / Read File]
+        G --> H[📝 Observation & Analysis]
+        H --> I{❓ Observation Type}
+        
+        I -->|Finding| J[✅ Mark Task Complete]
+        I -->|Conflict| K[⚠️ Conflict: Insert Task]
+        I -->|Gap| L[🔄 Gap: Retry Task]
+        
+        L --> E
+        J --> N{❓ More Tasks?}
+        N -->|Yes| E
     end
-    
-    Conclude["5. Write Report\n(Synthesize notes into a plain English summary)"] --> Report(["📄 Final Report"])
+
+    D --> E
+    K --> D
+    N -->|No| O([📄 Final Report])
+
+    %% Styling
+    classDef startEnd fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#0d47a1;
+    classDef process fill:#f5f5f5,stroke:#424242,stroke-width:2px,color:#212121;
+    classDef decision fill:#fff8e1,stroke:#ff8f00,stroke-width:2px,color:#5d4037;
+    classDef db fill:#efebe9,stroke:#4e342e,stroke-width:2px,color:#3e2723;
+    classDef success fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#1b5e20;
+    classDef alert fill:#ffebee,stroke:#c62828,stroke-width:2px,color:#b71c1c;
+
+    class A,O startEnd;
+    class B,C,E,F,G,H process;
+    class D db;
+    class I,N decision;
+    class J,L success;
+    class K alert;
 ```
+
+
 
 ### The 4 Files That Power the Agent:
 * [agent/state.py](file:///Users/omerkhanjadoon/Documents/libra/agent/state.py) — Stores the list of questions, notes, and files read so far.

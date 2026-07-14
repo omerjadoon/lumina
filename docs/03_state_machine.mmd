@@ -1,0 +1,19 @@
+stateDiagram-v2
+[*] --> Planning
+Planning --> TaskQueued
+TaskQueued --> ExecuteTask
+ExecuteTask --> ToolCall
+ToolCall --> ToolResult
+ToolResult --> Observe
+Observe --> Finding
+Observe --> Conflict
+Observe --> Gap
+Finding --> Decide
+Gap --> Retry
+Retry --> ExecuteTask
+Conflict --> InsertTask
+InsertTask --> TaskQueued
+Decide --> Continue
+Continue --> TaskQueued
+TaskQueued --> Finished: Queue Empty
+Finished --> [*]

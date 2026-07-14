@@ -1,0 +1,32 @@
+flowchart TD
+Start([User Request])-->P[Create Initial Plan]
+P-->T1[Verify IP Assignment]
+T1-->S1[Search Assignment]
+S1-->O1[Finding: IP Assigned]
+O1-->T2[University Ownership]
+T2-->S2[Search University Licence]
+S2-->C1{Conflict?}
+C1-->|Yes|NT1[Insert: Derivative Check]
+NT1-->S3[Search Technical Evidence]
+S3-->C2{Training Data Claim}
+C2-->NT2[Insert: Dataset Ownership]
+NT2-->S4[Search Litigation]
+S4-->C3{Licence Conflict}
+C3-->NT3[Insert: Imperial Consent]
+NT3-->S5[Search Consent]
+S5-->T3[Law Firm Alpha]
+T3-->S6[Search Contract]
+S6-->T4[University Licence Transfer]
+T4-->R1[Read Licence]
+R1-->T5[Litigation]
+T5-->R2[Read Litigation Register]
+R2-->NT4[Insert: DataVault Liability]
+NT4-->S7[Search DataVault]
+S7-->T6[Corporate Status]
+T6-->Retry1[Retry x2]
+Retry1-->Gap[Gap Recorded]
+Gap-->T7[Shareholder Rights]
+T7-->Retry2[Retry x2]
+Retry2-->T8[Regulatory Registration]
+T8-->T9[Compliance History]
+T9-->Finish([Final Report])

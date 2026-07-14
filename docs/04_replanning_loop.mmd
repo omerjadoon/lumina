@@ -1,0 +1,13 @@
+graph LR
+A[Plan]-->B[Task Queue]
+B-->C[Execute Task]
+C-->D[Tool Call]
+D-->E[Observation]
+E-->|Finding|F[Complete Task]
+E-->|Conflict|G[Insert New Task]
+E-->|Gap|H[Retry]
+G-->B
+H-->C
+F-->I{Tasks Remaining?}
+I-->|Yes|B
+I-->|No|J[Final Report]

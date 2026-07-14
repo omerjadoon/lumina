@@ -1,0 +1,30 @@
+LITIGATION AND DISPUTES REGISTER
+Nexus Legal Technologies Ltd
+Prepared by: Webb & Co Solicitors
+Date: 15 January 2024
+
+MATTER 1 — RESOLVED
+Reference: LIT-2021-001
+Counterparty: Former employee James Hooper
+Nature: Wrongful dismissal claim
+Status: Settled out of court, August 2021. Settlement amount: £22,000 (confidential).
+Risk to acquisition: None. Matter fully resolved.
+
+MATTER 2 — ACTIVE
+Reference: LIT-2023-004
+Counterparty: DataVault Ltd
+Nature: Breach of contract — DataVault alleges Nexus failed to deliver agreed API integration milestones under a development agreement dated May 2022.
+Claimed amount: £150,000
+Status: Pre-action correspondence. No proceedings issued as of the date of this register.
+External counsel opinion: Nexus has a reasonable defence. Counsel estimates 40% probability of claim proceeding to litigation.
+Risk to acquisition: Moderate. Potential liability of up to £150,000 unresolved.
+
+MATTER 3 — THREATENED
+Reference: LIT-2023-007
+Counterparty: Unknown — anonymous letter received December 2023
+Nature: Alleged unauthorised use of training data. Letter claims LexScan v1 was trained on proprietary datasets without licence.
+Status: No formal claim issued. Nexus legal team investigating. Identity of claimant unknown.
+Risk to acquisition: High. If claim proceeds and is upheld, could affect validity of core IP.
+
+MATTER 4 — NOTE
+No regulatory investigations or enforcement actions have been identified as of the date of this register.

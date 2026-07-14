@@ -1,0 +1,23 @@
+IP ASSIGNMENT AGREEMENT
+
+Date: 14 March 2022
+Assignor: Dr. Elena Vasquez (Founder)
+Assignee: Nexus Legal Technologies Ltd ("Nexus")
+
+1. ASSIGNMENT
+Dr. Elena Vasquez hereby assigns to Nexus all rights, title, and interest in the following intellectual property:
+  - Contract analysis algorithm ("LexScan v1") developed between January 2020 and December 2021
+  - Associated training datasets compiled by Dr. Vasquez during the same period
+  - Patent application GB2201234 (pending) filed 3 January 2022
+
+2. CONSIDERATION
+Nexus agrees to pay Dr. Vasquez a one-time fee of £50,000 upon execution of this agreement.
+
+3. REPRESENTATIONS
+Dr. Vasquez represents that she is the sole inventor of LexScan v1 and that no third party has any claim over the assigned IP.
+
+4. GOVERNING LAW
+This agreement is governed by the laws of England and Wales.
+
+Signed: Dr. Elena Vasquez
+Signed: Marcus Webb, CEO, Nexus Legal Technologies Ltd

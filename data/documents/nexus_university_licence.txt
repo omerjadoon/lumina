@@ -1,0 +1,23 @@
+TECHNOLOGY LICENCE AGREEMENT
+
+Date: 1 September 2019
+Licensor: Imperial College London ("Imperial")
+Licensee: Dr. Elena Vasquez (trading as Vasquez AI Research)
+
+1. GRANT OF LICENCE
+Imperial grants to Licensee a non-exclusive, non-transferable licence to use the NLP tokenisation framework ("ImperialNLP") developed under EPSRC grant EP/R012345/1 for commercial research purposes.
+
+2. RESTRICTIONS
+Licensee may not sublicense, assign, or transfer this licence to any third party without Imperial's prior written consent.
+
+3. IP OWNERSHIP
+All improvements or derivatives of ImperialNLP created by Licensee shall be jointly owned by Imperial and Licensee.
+
+4. TERM
+This licence shall remain in force for 10 years from the date of execution.
+
+5. GOVERNING LAW
+This agreement is governed by the laws of England and Wales.
+
+Signed: Prof. Alan Hartley, Imperial College London
+Signed: Dr. Elena Vasquez

@@ -1,0 +1,29 @@
+MASTER SERVICES AGREEMENT
+
+Date: 1 June 2021
+Client: Alpha & Partners LLP ("Client")
+Service Provider: Nexus Legal Technologies Ltd ("Nexus")
+
+1. SERVICES
+Nexus shall provide AI-powered contract review services as described in Schedule 1.
+
+2. FEES
+Client shall pay Nexus £8,000 per month for the duration of this agreement.
+
+3. TERM AND TERMINATION
+This agreement shall commence on 1 June 2021 and continue for an initial term of 3 years.
+Either party may terminate with 90 days' written notice after the initial term.
+
+4. CHANGE OF CONTROL
+In the event of a change of control of Nexus, Client shall have the right to terminate this agreement
+with 30 days' written notice. "Change of control" means any transaction resulting in a new entity
+acquiring more than 50% of the voting shares of Nexus.
+
+5. CONFIDENTIALITY
+Both parties agree to maintain strict confidentiality over all materials exchanged under this agreement.
+
+6. GOVERNING LAW
+This agreement is governed by the laws of England and Wales.
+
+Signed: Sarah Mitchell, Managing Partner, Alpha & Partners LLP
+Signed: Marcus Webb, CEO, Nexus Legal Technologies Ltd

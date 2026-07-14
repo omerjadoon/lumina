@@ -1,0 +1,21 @@
+ICO REGISTRATION RECORD
+
+Organisation: Nexus Legal Technologies Ltd
+ICO Registration Number: ZA987654
+Registration Status: Active
+Renewal Date: 28 February 2025
+Data Controller: Marcus Webb, CEO
+
+Processing Activities Registered:
+  - AI-assisted analysis of legal documents on behalf of law firm clients
+  - Storage of anonymised contract metadata for model improvement
+
+Notes:
+  - Nexus completed a Data Protection Impact Assessment (DPIA) in October 2023 covering LexScan v2 processing pipeline.
+  - No enforcement notices or fines issued by ICO as of date of record.
+  - UK GDPR compliance review conducted by external DPO, Lawton Privacy Ltd, December 2023. No material issues identified.
+
+SRA NOTIFICATION STATUS:
+Nexus Legal Technologies Ltd is not itself an authorised legal services provider.
+Nexus provides software tools to authorised firms and is not required to hold SRA authorisation.
+Confirmed by SRA correspondence dated 4 April 2023.

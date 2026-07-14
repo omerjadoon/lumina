@@ -1,0 +1,21 @@
+SHAREHOLDER REGISTER
+Nexus Legal Technologies Ltd — Company No. 12345678
+Last updated: 30 November 2023
+
+Shareholder                  Shares Held    % Ownership    Share Class
+---------------------------  -------------  -------------  -----------
+Marcus Webb                  4,500          45%            Ordinary A
+Dr. Elena Vasquez            3,500          35%            Ordinary A
+Meridian Ventures Fund II    2,000          20%            Preferred B
+
+Total issued shares: 10,000
+
+Notes:
+- Preferred B shares held by Meridian Ventures carry a 1x non-participating liquidation preference.
+- Meridian Ventures Fund II invested £2,000,000 in Series A round (April 2022).
+- A shareholders' agreement dated 15 April 2022 governs voting rights and transfer restrictions.
+
+SHAREHOLDERS' AGREEMENT — KEY TERMS (Summary extracted 30 Nov 2023):
+- Any transfer of Ordinary A shares requires right of first refusal by existing Ordinary A shareholders.
+- Meridian Ventures holds one board seat and standard protective provisions.
+- Drag-along rights: Meridian may drag other shareholders into an acquisition approved by a majority of the board.

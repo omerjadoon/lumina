@@ -1,0 +1,579 @@
+[
+  {
+    "scenario_id": "S1",
+    "scenario_name": "Full Corpus \u2014 Happy Path",
+    "goal": "Can Orion Capital safely acquire Nexus Legal Technologies?",
+    "available_documents": [
+      "nexus_ip_assignment.txt",
+      "nexus_university_licence.txt",
+      "nexus_client_contract_lawfirm_alpha.txt",
+      "nexus_incorporation_certificate.txt",
+      "nexus_shareholder_register.txt",
+      "nexus_litigation_register.txt",
+      "nexus_regulatory_filing.txt"
+    ],
+    "scoring": {
+      "total_score": 9.5,
+      "max_score": 10.0,
+      "percentage": 95.0,
+      "required_passes": 5,
+      "required_total": 5,
+      "scenario_pass": true,
+      "criteria": [
+        {
+          "id": "IP-01",
+          "category": "IP Ownership",
+          "description": "Confirms LexScan v1 IP was assigned from founder to Nexus",
+          "required": true,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report explicitly confirms that Dr. Elena Vasquez formally assigned LexScan v1 and pending patent application GB2201234 to Nexus under the documented 14 March 2022 IP assignment agreement.",
+          "expected_gap": false,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "IP-02",
+          "category": "IP Ownership",
+          "description": "Flags Imperial College licence as non-transferable with joint-ownership risk on derivatives",
+          "required": true,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report explicitly connects the assignment\u2019s sole-inventor and no-third-party-claim representations to the Imperial licence\u2019s joint-ownership and non-transferability terms, conditionally explains that LexScan v1 may derive from ImperialNLP, and flags the resulting ownership and transfer defects as a material acquisition risk.",
+          "expected_gap": false,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "CONTRACT-01",
+          "category": "Contractual Obligations",
+          "description": "Identifies change-of-control termination right in the Alpha & Partners contract",
+          "required": true,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report expressly identifies Alpha & Partners LLP\u2019s Clause 4 right to terminate on 30 days\u2019 notice following an acquisition of more than 50% of Nexus\u2019s voting shares and clearly connects that right to Orion\u2019s proposed acquisition, albeit conditionally on the threshold being crossed.",
+          "expected_gap": false,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "CONTRACT-02",
+          "category": "Contractual Obligations",
+          "description": "Flags that only one client contract was reviewed \u2014 gap in contractual coverage",
+          "required": false,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report explicitly states that the Alpha agreement was the only client contract available and warns that similar change-of-control, termination, or consent provisions may exist in undisclosed contracts.",
+          "expected_gap": true,
+          "expected_conflict": false,
+          "gap_correctly_flagged": true
+        },
+        {
+          "id": "LIT-01",
+          "category": "Litigation & Liabilities",
+          "description": "Identifies the active DataVault dispute (\u00a3150k, pre-action)",
+          "required": true,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report identifies DataVault Ltd, the \u00a3150,000 breach-of-contract claim, its unresolved pre-action status, counsel\u2019s 40% estimated probability of litigation, and treats it as a material exposure requiring resolution or allocation.",
+          "expected_gap": false,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "LIT-02",
+          "category": "Litigation & Liabilities",
+          "description": "Flags anonymous IP training data threat and its conflict with the founder's sole-inventor representation",
+          "required": true,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report identifies LIT-2023-007 as a High-risk anonymous claim alleging unlicensed proprietary training data and explicitly connects it to Vasquez\u2019s sole-inventor and no-third-party-claim representations in the IP assignment.",
+          "expected_gap": false,
+          "expected_conflict": true,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "CORP-01",
+          "category": "Corporate Structure",
+          "description": "Confirms valid UK incorporation under Companies Act 2006",
+          "required": false,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report confirms that Nexus Legal Technologies Ltd was incorporated in England and Wales as a private company limited by shares under the Companies Act 2006, identifies company number 12345678, and raises no incorporation-level structural concern.",
+          "expected_gap": false,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "CORP-02",
+          "category": "Corporate Structure",
+          "description": "Flags Meridian Ventures drag-along rights and absence of the full investment agreement",
+          "required": false,
+          "score": 0.5,
+          "verdict": "PARTIAL",
+          "reasoning": "The report identifies Meridian Ventures as the 20% Preferred B shareholder and notes that the full shareholders\u2019 agreement was unavailable, but it fails to flag Meridian\u2019s material drag-along right.",
+          "expected_gap": false,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "REG-01",
+          "category": "Regulatory & Compliance",
+          "description": "Confirms active ICO registration and absence of enforcement actions",
+          "required": false,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report confirms Nexus\u2019s active ICO registration ZA987654 covers AI-assisted legal-document analysis, states that no ICO enforcement notices or fines had been issued, and references both the October 2023 DPIA and December 2023 external DPO review finding no material issues.",
+          "expected_gap": false,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "REG-02",
+          "category": "Regulatory & Compliance",
+          "description": "Confirms Nexus does not require SRA authorisation",
+          "required": false,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report expressly confirms that Nexus is a software provider rather than an authorised legal services provider, is not required to hold SRA authorisation, and cites SRA correspondence dated 4 April 2023.",
+          "expected_gap": false,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        }
+      ]
+    },
+    "report_excerpt": "1. IP Ownership\n\nUnder nexus_ip_assignment.txt, Dr. Elena Vasquez assigned to Nexus Legal Technologies Ltd on 14 March 2022 all rights, title and interest in LexScan v1, the associated training datasets compiled between January 2020 and December 2021, and pending patent application GB2201234, filed on 3 January 2022. The consideration was \u00a350,000. Dr. Vasquez represented that she was the sole inventor and that no third party had any claim over the assigned IP. The agreement was signed by Dr. Vasquez and Marcus Webb for Nexus (nexus_ip_assignment.txt).\n\nThis assignment conflicts with nexus_univ\u2026",
+    "timestamp": "2026-07-14T18:22:32.755673"
+  },
+  {
+    "scenario_id": "S2",
+    "scenario_name": "Missing Litigation Register",
+    "goal": "Can Orion Capital safely acquire Nexus Legal Technologies?",
+    "available_documents": [
+      "nexus_ip_assignment.txt",
+      "nexus_university_licence.txt",
+      "nexus_client_contract_lawfirm_alpha.txt",
+      "nexus_incorporation_certificate.txt",
+      "nexus_shareholder_register.txt",
+      "nexus_regulatory_filing.txt"
+    ],
+    "scoring": {
+      "total_score": 8.0,
+      "max_score": 10.0,
+      "percentage": 80.0,
+      "required_passes": 3,
+      "required_total": 5,
+      "scenario_pass": true,
+      "criteria": [
+        {
+          "id": "IP-01",
+          "category": "IP Ownership",
+          "description": "Confirms LexScan v1 IP was assigned from founder to Nexus",
+          "required": true,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report explicitly confirms that Dr. Elena Vasquez formally assigned LexScan v1, its associated training datasets, and patent application GB2201234 to Nexus under the 14 March 2022 IP assignment agreement.",
+          "expected_gap": false,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "IP-02",
+          "category": "IP Ownership",
+          "description": "Flags Imperial College licence as non-transferable with joint-ownership risk on derivatives",
+          "required": true,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report explicitly connects the assignment\u2019s sole-inventor and no-third-party-claim representations to Imperial\u2019s potential joint ownership of derivatives and its non-transferability/consent restrictions, while correctly flagging the resulting uncertainty over Nexus\u2019s title and acquisition rights as a material risk.",
+          "expected_gap": false,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "CONTRACT-01",
+          "category": "Contractual Obligations",
+          "description": "Identifies change-of-control termination right in the Alpha & Partners contract",
+          "required": true,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report explicitly identifies Clause 4 of the Alpha & Partners LLP agreement, accurately states the 30-day termination right upon an acquisition of more than 50% of Nexus\u2019s voting shares, and directly notes that an Orion acquisition exceeding that threshold would trigger it.",
+          "expected_gap": false,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "CONTRACT-02",
+          "category": "Contractual Obligations",
+          "description": "Flags that only one client contract was reviewed \u2014 gap in contractual coverage",
+          "required": false,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report explicitly states that only the Alpha & Partners LLP client contract was available and warns that similar change-of-control or termination provisions may exist in undisclosed contracts.",
+          "expected_gap": false,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "LIT-01",
+          "category": "Litigation & Liabilities",
+          "description": "Identifies the active DataVault dispute (\u00a3150k, pre-action)",
+          "required": true,
+          "score": 0.0,
+          "verdict": "FAIL",
+          "reasoning": "The report entirely omits the DataVault Ltd dispute, including the \u00a3150,000 claimed amount, pre-action status, and counsel\u2019s 40% estimate, and therefore fails to surface this unresolved contingent liability.",
+          "expected_gap": true,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "LIT-02",
+          "category": "Litigation & Liabilities",
+          "description": "Flags anonymous IP training data threat and its conflict with the founder's sole-inventor representation",
+          "required": true,
+          "score": 0.5,
+          "verdict": "PARTIAL",
+          "reasoning": "The report identifies and rates the anonymous training-data threat as High and links it to the no-third-party-claim representation, but it does not explicitly connect that threat to Vasquez\u2019s sole-inventor representation as required for a full pass.",
+          "expected_gap": true,
+          "expected_conflict": false,
+          "gap_correctly_flagged": true
+        },
+        {
+          "id": "CORP-01",
+          "category": "Corporate Structure",
+          "description": "Confirms valid UK incorporation under Companies Act 2006",
+          "required": false,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report confirms that Nexus Legal Technologies Ltd, company number 12345678, was incorporated under the Companies Act 2006 as a private company limited by shares and identifies no incorporation-level structural concern.",
+          "expected_gap": false,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "CORP-02",
+          "category": "Corporate Structure",
+          "description": "Flags Meridian Ventures drag-along rights and absence of the full investment agreement",
+          "required": false,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report identifies Meridian Ventures Fund II as holding 20% Preferred B shares, describes its drag-along right for acquisitions approved by a board majority, and explicitly states that the underlying 15 April 2022 shareholders\u2019 agreement was unavailable for independent review.",
+          "expected_gap": false,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "REG-01",
+          "category": "Regulatory & Compliance",
+          "description": "Confirms active ICO registration and absence of enforcement actions",
+          "required": false,
+          "score": 0.5,
+          "verdict": "PARTIAL",
+          "reasoning": "The report identifies ICO registration ZA987654, its covered AI processing, no enforcement notices or fines, the DPIA, and the external DPO review, but it does not expressly confirm the record\u2019s stated \u201cActive\u201d status and instead raises an unresolved post-renewal concern.",
+          "expected_gap": false,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "REG-02",
+          "category": "Regulatory & Compliance",
+          "description": "Confirms Nexus does not require SRA authorisation",
+          "required": false,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report expressly states that April 2023 SRA correspondence confirmed Nexus is a software supplier to authorised firms, is not itself an authorised legal services provider, and therefore does not require SRA authorisation.",
+          "expected_gap": false,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        }
+      ]
+    },
+    "report_excerpt": "1. IP Ownership\n\nUnder nexus_ip_assignment.txt, Dr. Elena Vasquez assigned to Nexus Legal Technologies Ltd on 14 March 2022 all rights, title and interest in the LexScan v1 contract-analysis algorithm developed between January 2020 and December 2021, its associated training datasets, and pending patent application GB2201234, filed on 3 January 2022. Nexus agreed to pay \u00a350,000 upon execution. Section 3 states that Dr. Vasquez was the sole inventor and that no third party had any claim over the assigned intellectual property (nexus_ip_assignment.txt).\n\nThis conflicts with Clause 3 of nexus_univ\u2026",
+    "timestamp": "2026-07-14T18:46:01.676902"
+  },
+  {
+    "scenario_id": "S3",
+    "scenario_name": "Missing IP Assignment \u2014 Core Blocker",
+    "goal": "Can Orion Capital safely acquire Nexus Legal Technologies?",
+    "available_documents": [
+      "nexus_university_licence.txt",
+      "nexus_client_contract_lawfirm_alpha.txt",
+      "nexus_incorporation_certificate.txt",
+      "nexus_shareholder_register.txt",
+      "nexus_litigation_register.txt",
+      "nexus_regulatory_filing.txt"
+    ],
+    "scoring": {
+      "total_score": 9.0,
+      "max_score": 10.0,
+      "percentage": 90.0,
+      "required_passes": 3,
+      "required_total": 5,
+      "scenario_pass": true,
+      "criteria": [
+        {
+          "id": "IP-01",
+          "category": "IP Ownership",
+          "description": "Confirms LexScan v1 IP was assigned from founder to Nexus",
+          "required": true,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report explicitly identifies the documented 14 March 2022 IP assignment from Dr. Elena Vasquez to Nexus and states that it covers LexScan v1, associated datasets, and patent application GB2201234.",
+          "expected_gap": true,
+          "expected_conflict": false,
+          "gap_correctly_flagged": true
+        },
+        {
+          "id": "IP-02",
+          "category": "IP Ownership",
+          "description": "Flags Imperial College licence as non-transferable with joint-ownership risk on derivatives",
+          "required": true,
+          "score": 0.5,
+          "verdict": "PARTIAL",
+          "reasoning": "The report expressly connects the assignment to Imperial\u2019s joint-ownership and non-transferability terms and flags material acquisition risk, but it never specifically identifies Dr. Vasquez\u2019s \u201csole inventor\u201d and no-third-party-claims representation as potentially misleading or false.",
+          "expected_gap": false,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "CONTRACT-01",
+          "category": "Contractual Obligations",
+          "description": "Identifies change-of-control termination right in the Alpha & Partners contract",
+          "required": true,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report explicitly identifies Alpha & Partners LLP\u2019s Clause 4 termination right, states the 30-day notice period and >50% voting-share threshold, and correctly connects Orion\u2019s proposed control acquisition to the trigger.",
+          "expected_gap": false,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "CONTRACT-02",
+          "category": "Contractual Obligations",
+          "description": "Flags that only one client contract was reviewed \u2014 gap in contractual coverage",
+          "required": false,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report explicitly states that only the Alpha & Partners LLP contract was available and warns that undisclosed client agreements may contain similar change-of-control, consent, or termination provisions.",
+          "expected_gap": false,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "LIT-01",
+          "category": "Litigation & Liabilities",
+          "description": "Identifies the active DataVault dispute (\u00a3150k, pre-action)",
+          "required": true,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report identifies DataVault Ltd, the \u00a3150,000 breach-of-contract claim, its unresolved pre-action status, and counsel\u2019s 40% estimate that it will proceed to litigation, treating it as a liability requiring attention before completion.",
+          "expected_gap": false,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "LIT-02",
+          "category": "Litigation & Liabilities",
+          "description": "Flags anonymous IP training data threat and its conflict with the founder's sole-inventor representation",
+          "required": true,
+          "score": 0.5,
+          "verdict": "PARTIAL",
+          "reasoning": "The report identifies the anonymous LIT-2023-007 threat and its High-risk status, but links it only to the assignment of rights rather than explicitly to Vasquez\u2019s sole-inventor and no-third-party-claim representations.",
+          "expected_gap": false,
+          "expected_conflict": true,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "CORP-01",
+          "category": "Corporate Structure",
+          "description": "Confirms valid UK incorporation under Companies Act 2006",
+          "required": false,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report confirms that Nexus Legal Technologies Ltd was incorporated under the Companies Act 2006 as a private company limited by shares and identifies company number 12345678, with no incorporation-level structural concerns noted.",
+          "expected_gap": false,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "CORP-02",
+          "category": "Corporate Structure",
+          "description": "Flags Meridian Ventures drag-along rights and absence of the full investment agreement",
+          "required": false,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report identifies Meridian Ventures Fund II as holding 20% Preferred B shares, describes its board-approved drag-along rights and protective provisions, and explicitly states that the full shareholders\u2019 agreement dated 15 April 2022 was unavailable for independent review.",
+          "expected_gap": false,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "REG-01",
+          "category": "Regulatory & Compliance",
+          "description": "Confirms active ICO registration and absence of enforcement actions",
+          "required": false,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report confirms active ICO registration ZA987654, states that no ICO enforcement notices or fines were reported, and references both the October 2023 LexScan v2 DPIA and the December 2023 external DPO review finding no material issues.",
+          "expected_gap": false,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "REG-02",
+          "category": "Regulatory & Compliance",
+          "description": "Confirms Nexus does not require SRA authorisation",
+          "required": false,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report expressly confirms that Nexus is not required to hold SRA authorisation because it supplies software to authorised firms rather than acting as an authorised legal services provider, citing SRA correspondence dated 4 April 2023.",
+          "expected_gap": false,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        }
+      ]
+    },
+    "report_excerpt": "1. IP Ownership\n\nThe IP assignment dated 14 March 2022 purports to assign from Dr. Elena Vasquez to Nexus Legal Technologies Ltd all rights, title and interest in LexScan v1, its associated training datasets compiled between January 2020 and December 2021, and patent application GB2201234 (nexus_ip_assignment.txt).\n\nThis assignment conflicts with the university licence dated 1 September 2019. Clause 1 of nexus_university_licence.txt states that Imperial College London owns ImperialNLP and granted Dr. Vasquez, trading as Vasquez AI Research, only a non-exclusive, non-transferable licence. Claus\u2026",
+    "timestamp": "2026-07-14T19:16:20.936513"
+  },
+  {
+    "scenario_id": "S4",
+    "scenario_name": "IP Conflict Detection \u2014 Narrow Corpus",
+    "goal": "Does Nexus Legal Technologies have clean IP ownership of its core product?",
+    "available_documents": [
+      "nexus_ip_assignment.txt",
+      "nexus_university_licence.txt"
+    ],
+    "scoring": {
+      "total_score": 5.5,
+      "max_score": 10.0,
+      "percentage": 55.0,
+      "required_passes": 3,
+      "required_total": 5,
+      "scenario_pass": true,
+      "criteria": [
+        {
+          "id": "IP-01",
+          "category": "IP Ownership",
+          "description": "Confirms LexScan v1 IP was assigned from founder to Nexus",
+          "required": true,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report explicitly cites the 14 March 2022 IP assignment agreement and confirms that Dr. Elena Vasquez formally assigned LexScan v1, its associated datasets, and patent application GB2201234 to Nexus Legal Technologies Ltd.",
+          "expected_gap": false,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "IP-02",
+          "category": "IP Ownership",
+          "description": "Flags Imperial College licence as non-transferable with joint-ownership risk on derivatives",
+          "required": true,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report explicitly links the assignment\u2019s sole-inventor and no-third-party-claim representations to Imperial\u2019s pre-existing joint-ownership and non-transferability terms, conditionally explains that LexScan\u2019s derivative status could defeat Nexus\u2019s exclusive ownership and require Imperial\u2019s consent, and flags the issue as a material acquisition risk.",
+          "expected_gap": false,
+          "expected_conflict": true,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "CONTRACT-01",
+          "category": "Contractual Obligations",
+          "description": "Identifies change-of-control termination right in the Alpha & Partners contract",
+          "required": true,
+          "score": 0.5,
+          "verdict": "PARTIAL",
+          "reasoning": "The report identifies Clause 4\u2019s 30-day termination right upon an acquisition of more than 50% of Nexus\u2019s voting shares, but it fails to name Alpha & Partners LLP accurately and incorrectly leaves the trigger uncertain rather than concluding that the proposed Orion Capital acquisition would trigger it.",
+          "expected_gap": true,
+          "expected_conflict": false,
+          "gap_correctly_flagged": true
+        },
+        {
+          "id": "CONTRACT-02",
+          "category": "Contractual Obligations",
+          "description": "Flags that only one client contract was reviewed \u2014 gap in contractual coverage",
+          "required": false,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report explicitly states that no other client contracts were available for review and warns that similar change-of-control or termination provisions may exist in undisclosed contracts.",
+          "expected_gap": true,
+          "expected_conflict": false,
+          "gap_correctly_flagged": true
+        },
+        {
+          "id": "LIT-01",
+          "category": "Litigation & Liabilities",
+          "description": "Identifies the active DataVault dispute (\u00a3150k, pre-action)",
+          "required": true,
+          "score": 0.0,
+          "verdict": "FAIL",
+          "reasoning": "The report entirely omits the unresolved DataVault Ltd dispute (LIT-2023-004), including the \u00a3150,000 claimed amount, pre-action status, and counsel\u2019s 40% estimate that proceedings will follow.",
+          "expected_gap": true,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "LIT-02",
+          "category": "Litigation & Liabilities",
+          "description": "Flags anonymous IP training data threat and its conflict with the founder's sole-inventor representation",
+          "required": true,
+          "score": 1.0,
+          "verdict": "PASS",
+          "reasoning": "The report identifies LIT-2023-007 as an anonymous threatened claim concerning unlicensed proprietary training data, recognizes its High acquisition risk, and explicitly connects it to Vasquez\u2019s sole-inventor and no-third-party-claim representations in the IP assignment.",
+          "expected_gap": true,
+          "expected_conflict": false,
+          "gap_correctly_flagged": true
+        },
+        {
+          "id": "CORP-01",
+          "category": "Corporate Structure",
+          "description": "Confirms valid UK incorporation under Companies Act 2006",
+          "required": false,
+          "score": 0.5,
+          "verdict": "PARTIAL",
+          "reasoning": "The report confirms the company number and private-company incorporation, but fails to confirm valid incorporation in England and Wales under the Companies Act 2006 and incorrectly raises a jurisdictional concern despite the certificate expressly providing both facts.",
+          "expected_gap": true,
+          "expected_conflict": false,
+          "gap_correctly_flagged": true
+        },
+        {
+          "id": "CORP-02",
+          "category": "Corporate Structure",
+          "description": "Flags Meridian Ventures drag-along rights and absence of the full investment agreement",
+          "required": false,
+          "score": 0.0,
+          "verdict": "FAIL",
+          "reasoning": "The report does not address the shareholder register, Meridian Ventures\u2019 20% Preferred B holding, its drag-along rights or protective provisions, or the absence of the full shareholders\u2019 agreement for independent review.",
+          "expected_gap": true,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        },
+        {
+          "id": "REG-01",
+          "category": "Regulatory & Compliance",
+          "description": "Confirms active ICO registration and absence of enforcement actions",
+          "required": false,
+          "score": 0.5,
+          "verdict": "PARTIAL",
+          "reasoning": "The report confirms active ICO registration ZA987654 and the October 2023 DPIA, but omits that the registration covers AI-assisted legal-document processing, that no ICO enforcement notices or fines were issued, and that the December 2023 external DPO review found no material issues.",
+          "expected_gap": true,
+          "expected_conflict": false,
+          "gap_correctly_flagged": true
+        },
+        {
+          "id": "REG-02",
+          "category": "Regulatory & Compliance",
+          "description": "Confirms Nexus does not require SRA authorisation",
+          "required": false,
+          "score": 0.0,
+          "verdict": "FAIL",
+          "reasoning": "The report omits the SRA authorisation issue entirely and fails to confirm that Nexus, as a software provider rather than an authorised legal services provider, is not required to hold SRA authorisation as established by the April 2023 SRA correspondence.",
+          "expected_gap": true,
+          "expected_conflict": false,
+          "gap_correctly_flagged": false
+        }
+      ]
+    },
+    "report_excerpt": "1. IP Ownership\n\nUnder Section 1 of nexus_ip_assignment.txt, Dr. Elena Vasquez assigned to Nexus Legal Technologies Ltd on 14 March 2022 all rights, title and interest in the LexScan v1 contract-analysis algorithm developed from January 2020 to December 2021, the associated training datasets from that period, and pending patent application GB2201234. Nexus paid \u00a350,000. Section 3 states that Dr. Vasquez is the sole inventor and that no third party has any claim over the assigned IP. The agreement contains no express exclusion or reservation of rights to Dr. Vasquez (nexus_ip_assignment.txt).\n\n\u2026",
+    "timestamp": "2026-07-14T19:29:30.918901"
+  }
+]

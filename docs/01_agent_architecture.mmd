@@ -1,0 +1,17 @@
+flowchart TD
+A([User Goal])-->B[Planner]
+B-->C[Generate Initial Investigation Tasks]
+C-->D[Task Queue]
+D-->E[Select Next Task]
+E-->F[Tool Decision]
+F-->G[Search Corpus / Read File]
+G-->H[Observation]
+H-->I{Observation Type}
+I-->|Finding|J[Mark Task Complete]
+I-->|Conflict|K[Insert New Task]
+I-->|Gap|L[Retry]
+L-->E
+K-->D
+J-->N{More Tasks?}
+N-->|Yes|E
+N-->|No|O[Final Report]

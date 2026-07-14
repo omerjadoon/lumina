@@ -1,0 +1,18 @@
+DOCUMENT CORPUS INDEX
+Acquisition Target: Nexus Legal Technologies Ltd
+Acquirer: Orion Capital Partners
+
+File                                        Category                  Key Content
+------------------------------------------  ------------------------  --------------------------------------------------
+nexus_ip_assignment.txt                     IP Ownership              Founder assigned LexScan v1 and patent to Nexus
+nexus_university_licence.txt                IP Ownership              Non-transferable licence from Imperial; derivatives jointly owned
+nexus_client_contract_lawfirm_alpha.txt     Contractual Obligations   Change-of-control termination right for key client
+nexus_incorporation_certificate.txt         Corporate Structure       Valid UK incorporation, Companies Act 2006
+nexus_shareholder_register.txt              Corporate Structure       Ownership split; Meridian drag-along rights; shareholders' agreement
+nexus_litigation_register.txt               Litigation & Liabilities  Active claim £150k; threatened IP claim (anonymous, high risk)
+nexus_regulatory_filing.txt                 Regulatory & Compliance   ICO registered; no SRA required; no enforcement actions
+
+DELIBERATELY ABSENT DOCUMENTS (planted gaps for evaluation):
+  - No second client contract provided (agent cannot confirm if change-of-control clause is industry-wide or isolated)
+  - No Meridian Ventures investment agreement (agent cannot verify exact protective provisions independently)
+  - No response or investigation report on the anonymous IP training data threat (LIT-2023-007)

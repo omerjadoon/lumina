@@ -6,6 +6,11 @@
 
 Autonomous due diligence agent for M&A legal review. Given a natural language goal and a corpus of legal documents, the agent plans an investigation, reads documents, records findings and conflicts, and produces a structured report.
 
+<p align="center">
+  <a href="https://www.loom.com/share/3afb0c7f7bb14f348bfb5345744f4b98">
+    <img src="docs/loom_demo.gif" alt="Lumina Demo Video" width="600">
+  </a>
+</p>
 
 ## Problem Statement
 When one company wants to buy another, lawyers have to read hundreds of pages of contracts, corporate filings, and court records to find risks. This AI assistant automates that process: it takes a goal (like *"Can Company A safely buy Company B?"*), plans its own search across a folder of local documents, reads them, flags any missing papers or conflicting claims, and writes a clear summary report.

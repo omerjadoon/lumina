@@ -8,7 +8,7 @@ Autonomous due diligence agent for M&A legal review. Given a natural language go
 
 <p align="center">
   <a href="https://www.loom.com/share/3afb0c7f7bb14f348bfb5345744f4b98">
-    <img src="docs/loom_demo.gif" alt="Lumina Demo Video" width="600">
+    <img src="https://img.shields.io/badge/▶%20Watch%20Demo-Loom-purple?style=for-the-badge&logo=loom&logoColor=white" alt="Watch Demo on Loom">
   </a>
 </p>
 
